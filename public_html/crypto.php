@@ -26,7 +26,7 @@ class SimpleAsymmetricCrypt
     private $_pub_key;
     private $_priv_key;
     private $_base64 = TRUE;
-    private $_csplit = TRUE;
+    private $_csplit = FALSE;
     
     public function __construct() {}
 
@@ -49,7 +49,7 @@ class SimpleAsymmetricCrypt
             throw new Exception("Couldn't save public key to file!");
     }
 
-    public function setBase64Usage( $use, $chunk_split = TRUE )
+    public function setBase64Usage( $use, $chunk_split = FALSE )
     {
         $this->_base64 = $use;
         $this->_csplit = $chunk_split;
