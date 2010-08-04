@@ -185,6 +185,16 @@ while( $f = readdir( $dir ) )
                 <p>However, the PKCS#1 standard, which OpenSSL uses, specifies a padding scheme (so you can encrypt smaller quantities without losing security), and that padding scheme takes a minimum of 11 bytes (it will be longer if the value you're encrypting is smaller). So <strong>the highest number of bits you can encrypt with a 1024-bit key is 936 bits</strong> because of this (unless you disable the padding by adding the OPENSSL_NO_PADDING flag, in which case you can go up to 1023-1024 bits). <strong>With a 2048-bit key it's 1960 bits instead.</strong></p>
 
                 <p>But as chsnyder correctly wrote, the normal application of a public key encryption algorithm is to store a key or a hash of the data you want to respectively encrypt or sign. A hash is typically 128-256 bits (the PHP sha1() function returns a 160 bit hash). And an AES key is 128 to 256 bits. So either of those will comfortably fit inside a single RSA encryption.</p>
+                
+                <hr/>
+                
+                <p>
+                    <strong>UTF-8 characters in 1024bit:</strong><br/>
+                    UTF-8 is (as the name states) represents a character as an 8bit sequence and the encryption requires an 11bit padding minimum (it can be overridden as the comment above states), thus:
+                    <pre>( 1024 - ( 11 * 8 ) ) / 8 = 117</pre>
+                    This means that a 1024bit key can only encrypt 117 characters with padding enabled.<br/>
+                    In a 384bit key (this is the minimum size) is 37 characters + padding.
+                </p>
             </fieldset>
         </form>
         </div>
