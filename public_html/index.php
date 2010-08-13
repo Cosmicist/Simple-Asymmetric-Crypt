@@ -2,7 +2,7 @@
 
 error_reporting( E_ALL ^ E_NOTICE );
 
-require "crypto.php";
+require "SimpleAsymmetricCrypt.php";
 $c = new SimpleAsymmetricCrypt();
 
 define('IS_AJAX', strtolower( $_SERVER['HTTP_X_REQUESTED_WITH'] ) == 'xmlhttprequest');
