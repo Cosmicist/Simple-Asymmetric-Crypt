@@ -44,7 +44,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' && isset( $_POST['action'] ) )
             $create_msg->text = 'Key pair successfully created!';
             try
             {
-                $c->createKeyPair( '../keys/' . $_POST['key_name'], $_POST['key_pass'], (int)$_POST['key_bits'] );
+                $c->createKeyFiles( '../keys/' . $_POST['key_name'], $_POST['key_pass'], (int)$_POST['key_bits'] );
                 
                 if( IS_AJAX ) sendAjaxResponse( $create_msg->text, 'success' );
             } catch( Exception $e ) {
