@@ -214,7 +214,7 @@ class SimpleAsymmetricCrypt
        
         if( $this->_base64 || $url_safe )
         {
-            if( $url_safe ) $data = strtr( $data, '-_,', '+/=');
+            $data = strtr( $data, '-_,', '+/=');
             $data = base64_decode( $data );
         }
         
