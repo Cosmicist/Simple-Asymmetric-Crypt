@@ -101,6 +101,23 @@ disabled by calling `useBase64()`, which takes 2 parameters, `$use`
 (required, boolean) and `$chunk_split` (optional, boolean, defaults to
 FALSE).
 
+## Decrypting data
+
+To decrypt previously encrypted data you must have the correct private key, load
+it and call the `decrypt` function. It doesn't matter if the data was encoded
+with base64 or not.
+
+```php
+<?php
+
+$sac->setPrivateKey('key_fname.key'); // Set the private key to use
+$decrypted = $sac->decrypt( $encrypted );
+
+?>
+```
+
+`$decrypted` will now have the original decrypted data.
+
 ## Data size and padding
 
 > Basically when you encrypt something using an RSA key (whether public or
