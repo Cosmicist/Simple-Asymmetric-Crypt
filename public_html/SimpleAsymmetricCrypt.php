@@ -23,18 +23,50 @@
 
 class SimpleAsymmetricCrypt
 {
-    private $_pub_key;
-    private $_priv_key;
-    private $_base64 = TRUE;
-    private $_csplit = FALSE;
-    private $_b64_url_safe = FALSE;
-    private $_priv_key_ext;
-    private $_pub_key_ext;
+    protected $_pub_key;
+    protected $_priv_key;
+    protected $_b64_url_safe = FALSE;
+
+    /* Base64 */
+    protected $_base64 = TRUE;
+    protected $_csplit = FALSE;
+
+    protected $_conf;
     
-    public function __construct( $pri_key_ext = '.key', $pub_key_ext = '.pub' )
+    public function __construct( $options = array() )
     {
-        $this->_priv_key_ext = $pri_key_ext;
-        $this->_pub_key_ext = $pub_key_ext;
+        $defaults = array(
+            'private_key_ext' => '.key',
+            'public_key_ext' => '.pub',
+            'private_key' => NULL,
+            'public_key' => NULL,
+            'passphrase' => NULL
+            'key_filename' => NULL
+        );
+
+        // If a string is received as the options, use it as the key filename
+        if( is_string( $options ) )
+        {
+            $options = array( 'key_filename' => $options );
+        }
+
+        $this->_conf = array_merge( $defaults, $options );
+
+        if( $this->_conf['key_filename'] && $passphrase )
+        {
+            $this->setPrivateKey( "{$this->_conf['key_filename']}.{$this->_conf['private_key_ext']}", $this->_conf['passphrase'] );
+            $this->setPublicKey( "{$this->_conf['key_filename']}.{$this->_conf['public_key_ext']}" );
+        }
+
+        if( $this->_conf['private_key'] && $this->_conf['passphrase'] )
+        {
+            $this->setPublicKey( $this->_conf['private_key'], $this->_conf['passphrase'] );
+        }
+
+        if( $this->_conf['public_key'] )
+        {
+            $this->setPublicKey( $this->_conf['public_key'] );
+        }
     }
 
     /**
@@ -54,11 +86,11 @@ class SimpleAsymmetricCrypt
         $key = $this->createKey( $passphrase, $bits );
 
         // Save Private Key to file
-        if( ! file_put_contents( "$filename.key", $key['private'] ) )
+        if( ! file_put_contents( "$filename.{$this->_conf['private_key_ext']}", $key->private ) )
             throw new Exception( "Couldn't save Private Key to file!");
 
         // Save Public Key to file
-        if( ! file_put_contents( "$filename.pub", $key['public']) )
+        if( ! file_put_contents( "$filename.{$this->_conf['public_key_ext']}", $key->public) )
             throw new Exception( "Couldn't save Public Key to file!");
         
         return TRUE;
@@ -67,12 +99,12 @@ class SimpleAsymmetricCrypt
     /**
      * Creates a Private Key and it's derivative Public Key
      *
-     * It returns an array with the 'private' and 'public'
-     * array keys holding it's respective keys.
+     * It returns an object with the 'private' and 'public' properties holding
+     * it's respective key values.
      *
      * @param string $passphrase
      * @param int $bits (>= 384)
-     * @return array
+     * @return stdClass
      */
     public function createKey( $passphrase, $bits = 1024 )
     {
@@ -95,8 +127,9 @@ class SimpleAsymmetricCrypt
         if( ! openssl_pkey_export($pkey, $pkey_out) )
             throw new Exception("Couldn't export private key!");
 
-        $key['private'] = $pkey_out;
-        $key['public'] = $key_details['key'];
+        $key = new stdClass;
+        $key->private = $pkey_out;
+        $key->public = $key_details['key'];
 
         return $key;
     }
@@ -204,7 +237,7 @@ class SimpleAsymmetricCrypt
      * Decrypts data using a private key
      * 
      * @param $data Encrypted data
-     * @param $base64 Tell if the data is base64 encoded
+     * @param $url_safe Tell if the data is base64 encoded
      * @return $string Decrypted data
      */
     public function decrypt( $data, $url_safe = FALSE )
