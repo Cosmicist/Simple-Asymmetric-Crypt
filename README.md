@@ -132,12 +132,6 @@ characters.
 
 `( 1024 - 88 ) = 936 bits / 8 (a utf-8 char) = 117`
 
-<strong>UTF-8 characters in 1024bit:</strong><br/>
-UTF-8 is (as the name states) represents a character as an 8bit sequence and the encryption requires an 11bit padding minimum (it can be overridden as the comment above states), thus:
-<pre>( 1024 - ( 11 * 8 ) ) / 8 = 117</pre>
-This means that a 1024bit key can only encrypt 117 characters with padding enabled.<br/>
-In a 384bit key (this is the minimum size) is 37 characters + padding.
-
 ## License
 
 Released under MIT License
