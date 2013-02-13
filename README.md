@@ -1,5 +1,7 @@
-Simple Asymmetric Crypt
+Simple Asymmetric Crypt [![project status](http://stillmaintained.com/xFlatlinex/Simple-Asymmetric-Crypt.png)](http://stillmaintained.com/xFlatlinex/Simple-Asymmetric-Crypt)
 =======================
+
+**This project is deprecated, development continues on [xFlatlinex/AsymmetriCrypt](https://github.com/xFlatlinex/AsymmetriCrypt)**
 
 Asymmetric key cryptography as simple as it gets.
 
